@@ -2,3 +2,4 @@ pyrogrammod
 tgcrypto
 python-telegram-bot
 python-dotenv
+requests
