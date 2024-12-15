@@ -3,3 +3,4 @@ tgcrypto
 python-telegram-bot
 python-dotenv
 requests
+httpx==0.27.2
