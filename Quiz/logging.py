@@ -1,6 +1,7 @@
 import config
 import logging
 from logging.handlers import RotatingFileHandler
+from pyrogram import filters
 
 SUDOERS = filters.user()
 
