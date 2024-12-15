@@ -15,15 +15,13 @@ API_HASH = getenv("API_HASH")
 BOT_TOKEN = "7656510911:AAEyXD6baANnUNZNumhW5txwZjNS5Bm9bEY"
 
 # Your User ID.
-OWNER_ID = list(
-    map(int, getenv("OWNER_ID", "").split())
-)  # Input type must be interger
+OWNER_ID = 7009601543
 
 
 # For customized or modified Repository
 UPSTREAM_REPO = getenv(
     "UPSTREAM_REPO",
-    "https://github.com/nortoxs/Quizbot",
+    "https://github.com/badmunda011/bt",
 )
 UPSTREAM_BRANCH = getenv("UPSTREAM_BRANCH", "main")
 
