@@ -10,10 +10,11 @@ async def main():
     await app.start()
     for all_module in ALL_MODULES:
         importlib.import_module("Quiz.plugins" + all_module)
-    LOGGER.info("Successfully Imported Modules")
+    LOGGER.info("Successfully Imported All Modules")
     LOGGER.info("Quiz Bot Started Successfully")
-    await idle()
+    await app.idle()
 
 # Start the bot
 if __name__ == "__main__":
-    asyncio.run(main())
+    loop.run_until_complete(main())
+    LOGGER.info("Stopping Bot! GoodBye")
