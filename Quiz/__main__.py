@@ -1,9 +1,15 @@
 import asyncio
-from Quiz import app  # Import the bot instance from __init__.py
+from Quiz import LOGGER, app
 from pyrogram import idle
+from Quiz.plugins import ALL_MODULES
 
 async def main():
       await app.start()
+      for all_module in ALL_MODULES:
+        importlib.import_module("Quiz.plugins" + all_module)
+      LOGGER("Quiz.plugins").info(
+        "Successfully Imported Modules"
+      )
       await idle()
   
 # Start the bot
