@@ -10,4 +10,3 @@ app = Client(
          bot_token=BOT_TOKEN,
          plugins=dict(root="Quiz.plugins.tools")  # Ensure the plugins folder is structured correctly
 )
-)
