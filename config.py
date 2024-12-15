@@ -19,5 +19,13 @@ OWNER_ID = list(
     map(int, getenv("OWNER_ID", "").split())
 )  # Input type must be interger
 
+
+# For customized or modified Repository
+UPSTREAM_REPO = getenv(
+    "UPSTREAM_REPO",
+    "https://github.com/nortoxs/Quizbot",
+)
+UPSTREAM_BRANCH = getenv("UPSTREAM_BRANCH", "main")
+
 ### DONT TOUCH or EDIT codes after this line
 BANNED_USERS = filters.user()
