@@ -5,20 +5,15 @@ from pyrogram import filters
 
 SUDOERS = filters.user()
 
+# store all logs
 logging.basicConfig(
+    format="[%(name)s]:: %(message)s",
     level=logging.INFO,
-    format="[%(asctime)s - %(levelname)s] - %(name)s - %(message)s",
-    datefmt="%d-%b-%y %H:%M:%S",
+    datefmt="%H:%M:%S",
     handlers=[
-        RotatingFileHandler(
-            maxBytes=5000000, backupCount=10
-        ),
+        RotatingFileHandler("logs.txt", maxBytes=(1024 * 1024 * 5), backupCount=10),
         logging.StreamHandler(),
     ],
 )
 
-logging.getLogger("pyrogram").setLevel(logging.ERROR)
-
-
-def LOGGER(name: str) -> logging.Logger:
-    return logging.getLogger(name)
+LOGGER = logging.getLogger("INFO")
