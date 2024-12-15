@@ -21,6 +21,11 @@
         "description": "A Bot's token from Botfather",
         "value": "",
         "required": true
+      },
+      "OWNER_ID": {
+        "description": "Your user id.",
+        "value": "",
+        "required": true
       }
     },
     "buildpacks": [
