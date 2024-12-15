@@ -16,5 +16,4 @@ async def main():
 
 # Start the bot
 if __name__ == "__main__":
-    print("Quiz bot started successfully")
     asyncio.run(main())
