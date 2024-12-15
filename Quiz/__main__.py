@@ -13,6 +13,7 @@ async def main():
       LOGGER("Quiz.plugins").info(
         "Successfully Imported Modules"
       )
+      LOGGER("Quiz").info("Quiz Bot Started Successfully")
       await idle()
   
 # Start the bot
