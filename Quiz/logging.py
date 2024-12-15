@@ -1,5 +1,8 @@
+import config
 import logging
 from logging.handlers import RotatingFileHandler
+
+SUDOERS = filters.user()
 
 logging.basicConfig(
     level=logging.INFO,
