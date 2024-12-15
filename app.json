@@ -3,7 +3,7 @@
     "description": "Simple Telegram Quiz Bot.",
     "keywords": [
     "python3",
-    "telegram",
+    "telegram"
     ],
     "stack": "container",
     "env": {
