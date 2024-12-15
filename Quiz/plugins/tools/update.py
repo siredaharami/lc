@@ -5,6 +5,7 @@ import sys
 from pyrogram import Client, filters
 from git import Repo
 from git.exc import GitCommandError, InvalidGitRepositoryError
+from Quiz import app
 
 @app.on_message(filters.command("update") & filters.user(OWNER_ID))
 async def update_repo_latest(client, message):
