@@ -12,7 +12,7 @@ async def main():
         importlib.import_module("Quiz.plugins" + all_module)
     LOGGER.info("Successfully Imported All Modules")
     LOGGER.info("Quiz Bot Started Successfully")
-    await app.idle()
+    await idle()
 
 # Start the bot
 if __name__ == "__main__":
