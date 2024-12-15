@@ -1,75 +1,52 @@
-import asyncio
-import shlex
-from typing import Tuple
-
+from config import *
+import subprocess
+import os
+import sys
+from pyrogram import Client, filters
 from git import Repo
 from git.exc import GitCommandError, InvalidGitRepositoryError
+from Quiz import app
 
-from config import *
-
-from ..logging import LOGGER
-
-
-def install_req(cmd: str) -> Tuple[str, str, int, int]:
-    async def install_requirements():
-        args = shlex.split(cmd)
-        process = await asyncio.create_subprocess_exec(
-            *args,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-        )
-        stdout, stderr = await process.communicate()
-        return (
-            stdout.decode("utf-8", "replace").strip(),
-            stderr.decode("utf-8", "replace").strip(),
-            process.returncode,
-            process.pid,
-        )
-
-    return asyncio.get_event_loop().run_until_complete(
-        install_requirements()
-    )
-
-
-def git():
-    REPO_LINK = config.UPSTREAM_REPO
-    if config.GIT_TOKEN:
-        GIT_USERNAME = REPO_LINK.split("com/")[1].split("/")[0]
-        TEMP_REPO = REPO_LINK.split("https://")[1]
-        UPSTREAM_REPO = (
-            f"https://{GIT_USERNAME}:{config.GIT_TOKEN}@{TEMP_REPO}"
-        )
-    else:
-        UPSTREAM_REPO = config.UPSTREAM_REPO
+@app.on_message(filters.command("update") & filters.user(OWNER_ID))
+async def update_repo_latest(client, message):
+    response = await message.reply_text("Checking for available updates...")
     try:
         repo = Repo()
-        LOGGER(__name__).info(f"Git Client Found [VPS DEPLOYER]")
     except GitCommandError:
-        LOGGER(__name__).info(f"Invalid Git Command")
+        return await response.edit("Git Command Error")
     except InvalidGitRepositoryError:
-        repo = Repo.init()
-        if "origin" in repo.remotes:
-            origin = repo.remote("origin")
-        else:
-            origin = repo.create_remote("origin", UPSTREAM_REPO)
-        origin.fetch()
-        repo.create_head(
-            config.UPSTREAM_BRANCH,
-            origin.refs[config.UPSTREAM_BRANCH],
+        return await response.edit("Invalid Git Repsitory")
+    to_exc = f"git fetch origin aditya &> /dev/null"
+    os.system(to_exc)
+    await asyncio.sleep(7)
+    verification = ""
+    REPO_ = repo.remotes.origin.url.split(".git")[0]  # main git repository
+    for checks in repo.iter_commits(f"HEAD..origin/main"):
+        verification = str(checks.count())
+    if verification == "":
+        return await response.edit("Bot is up-to-date!")
+    updates = ""
+    ordinal = lambda format: "%d%s" % (
+        format,
+        "tsnrhtdd"[(format // 10 % 10 != 1) * (format % 10 < 4) * format % 10 :: 4],
+    )
+    for info in repo.iter_commits(f"HEAD..origin/main"):
+        updates += f"<b>➣ #{info.count()}: [{info.summary}]({REPO_}/commit/{info}) by -> {info.author}</b>\n\t\t\t\t<b>➥ Commited on:</b> {ordinal(int(datetime.fromtimestamp(info.committed_date).strftime('%d')))} {datetime.fromtimestamp(info.committed_date).strftime('%b')}, {datetime.fromtimestamp(info.committed_date).strftime('%Y')}\n\n"
+    _update_response_ = "<b>A new update is available for the Bot!</b>\n\n➣ Pushing Updates Now</code>\n\n**<u>Updates:</u>**\n\n"
+    _final_updates_ = _update_response_ + updates
+    if len(_final_updates_) > 4096:
+        link = await paste_queue(updates)
+        url = link + "/index.txt"
+        nrs = await response.edit(
+            f"<b>A new update is available for the Bot!</b>\n\n➣ Pushing Updates Now</code>\n\n**<u>Updates:</u>**\n\n[Click Here to checkout Updates]({url})"
         )
-        repo.heads[config.UPSTREAM_BRANCH].set_tracking_branch(
-            origin.refs[config.UPSTREAM_BRANCH]
-        )
-        repo.heads[config.UPSTREAM_BRANCH].checkout(True)
-        try:
-            repo.create_remote("origin", config.UPSTREAM_REPO)
-        except BaseException:
-            pass
-        nrs = repo.remote("origin")
-        nrs.fetch(config.UPSTREAM_BRANCH)
-        try:
-            nrs.pull(config.UPSTREAM_BRANCH)
-        except GitCommandError:
-            repo.git.reset("--hard", "FETCH_HEAD")
-        install_req("pip3 install --no-cache-dir -r requirements.txt")
-        LOGGER(__name__).info(f"Fetched Updates from: {REPO_LINK}")
+    else:
+        nrs = await response.edit(_final_updates_, disable_web_page_preview=True)
+    os.system("git stash &> /dev/null && git pull")
+    await response.edit(
+        f"{nrs.text}\n\nBot was updated successfully! Now, wait for 1 - 2 mins until the bot reboots!"
+    )
+    os.system("pip3 install -r requirements.txt --force-reinstall")
+    os.system(f"kill -9 {os.getpid()} && python3 -m Quiz")
+    sys.exit()
+    return
