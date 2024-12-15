@@ -1,7 +1,10 @@
 import asyncio
+import importlib
 from Quiz import LOGGER, app
 from pyrogram import idle
 from Quiz.plugins import ALL_MODULES
+
+loop = asyncio.get_event_loop()
 
 async def main():
       await app.start()
