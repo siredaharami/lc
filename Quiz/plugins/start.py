@@ -6,4 +6,4 @@ from Quiz import app
 # Register handlers
 app.add_handler(MessageHandler(start_command, filters.command("start")))
 app.add_handler(MessageHandler(handle_photo, filters.photo))
-app.add_handler(MessageHandler(handle_text, filters.text & ~filters.command))
+app.add_handler(MessageHandler(handle_text, filters.text & ~filters.command(["start"])))
