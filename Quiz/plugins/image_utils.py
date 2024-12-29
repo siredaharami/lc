@@ -1,19 +1,20 @@
 from PIL import Image, ImageDraw, ImageFont
 
-def add_text_to_image(image_path, text, font_size=50):
+def add_text_to_image(image_path, text, text_color="black", font_size=50):
     """
-    Adds text to the center of the image.
+    Adds text to the center of the image with the specified text color.
 
     Args:
         image_path (str): Path to the input image.
         text (str): Text to overlay on the image.
+        text_color (str): Color of the text (e.g., 'red', 'blue', 'white').
         font_size (int): Size of the font.
 
     Returns:
-        str: Path to the output image.
+        Image: Modified PIL Image object.
     """
     try:
-        # Open image
+        # Open the image
         img = Image.open(image_path)
 
         # Create a drawing object
@@ -21,7 +22,7 @@ def add_text_to_image(image_path, text, font_size=50):
 
         # Load font
         try:
-            font = ImageFont.truetype("font.ttf", font_size)
+            font = ImageFont.truetype("arial.ttf", font_size)
         except IOError:
             font = ImageFont.load_default()
 
@@ -30,12 +31,9 @@ def add_text_to_image(image_path, text, font_size=50):
         text_x = (img.width - text_width) // 2
         text_y = (img.height - text_height) // 2
 
-        # Add text to image
-        draw.text((text_x, text_y), text, fill="white", font=font)
+        # Add text to the image
+        draw.text((text_x, text_y), text, fill=text_color, font=font)
 
-        # Save the modified image
-        output_path = "output_image.png"
-        img.save(output_path)
-        return output_path
+        return img
     except Exception as e:
         raise Exception(f"Error processing image: {e}")
