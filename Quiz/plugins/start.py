@@ -1,8 +1,7 @@
 from pyrogram import Client, filters
 from Quiz.plugins.handlers import handle_photo, handle_text, handle_callback_query
 from Quiz import app
-
-users_data = {}
+from config import *
 
 @app.on_message(filters.command("start"))
 async def start(client, message):
