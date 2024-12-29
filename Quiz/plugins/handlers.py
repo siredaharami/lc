@@ -1,5 +1,5 @@
 from pyrogram import Client, filters
-from image_utils import add_text_to_image
+from Quiz.plugins.image_utils import add_text_to_image
 
 # Temporary storage for user data
 user_data = {}
