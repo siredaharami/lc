@@ -2,8 +2,7 @@ from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from Quiz.plugins.image_utils import send_edited_image
 from Quiz import app
-
-users_data = {}
+from config import *
 
 @app.on_message(filters.photo)
 async def handle_photo(client, message):
