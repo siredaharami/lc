@@ -4,21 +4,12 @@ import io
 users_data = {}
 
 async def send_edited_image(client, chat_id):
-    if chat_id not in users_data:
-        await client.send_message(chat_id, "Error: No data found for this chat. Please set up your data first.")
-        return
-
     user_data = users_data[chat_id]
-    photo_data = user_data.get('photo')
-    if not photo_data:
-        await client.send_message(chat_id, "Error: No photo data found. Please upload an image first.")
-        return
-
-    # Extract other parameters safely
+    photo_data = user_data['photo']
     text = user_data.get('text', '')
     position = user_data.get('position', (10, 10))
     color = user_data.get('color', 'black')
-    font_path = user_data.get('font_path', "font.ttf")
+    font_path = user_data.get('font_path', "Southam Demo.ttf")
     stroke_color = user_data.get('stroke_color', 'black')
     stroke_width = user_data.get('stroke_width', 2)
     stroke_enabled = user_data.get('stroke_enabled', False)
