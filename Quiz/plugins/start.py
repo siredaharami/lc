@@ -1,4 +1,4 @@
-from pyrogram import Client
+from pyrogram import Client, filters
 from Quiz.plugins.handlers import start_command, handle_photo, handle_text
 from Quiz import app
 
