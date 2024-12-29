@@ -8,11 +8,11 @@ from pyrogram import filters
 load_dotenv()
 
 # Get it from my.telegram.org
-API_ID = int(getenv("API_ID", ""))
-API_HASH = getenv("API_HASH")
+API_ID = 25742938
+API_HASH = "b35b715fe8dc0a58e8048988286fc5b6"
 
 ## Get it from @Botfather in Telegram.
-BOT_TOKEN = "7656510911:AAEyXD6baANnUNZNumhW5txwZjNS5Bm9bEY"
+BOT_TOKEN = "7796646089:AAG3yoXJRSI-D2A5w1kPraju_qpL_Xt3JO8"
 
 # Your User ID.
 OWNER_ID = 7009601543
@@ -21,9 +21,6 @@ OWNER_ID = 7009601543
 # For customized or modified Repository
 UPSTREAM_REPO = getenv(
     "UPSTREAM_REPO",
-    "https://github.com/badmunda011/bt",
+    "https://github.com/siredaharami/lc",
 )
 UPSTREAM_BRANCH = getenv("UPSTREAM_BRANCH", "main")
-
-### DONT TOUCH or EDIT codes after this line
-BANNED_USERS = filters.user()
