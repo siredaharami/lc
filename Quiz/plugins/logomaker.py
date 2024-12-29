@@ -7,7 +7,7 @@ def create_logo(text, font_size=50, logo_size=(400, 400), bg_color="white", text
 
     # Load font
     try:
-        font = ImageFont.truetype("arial.ttf", font_size)
+        font = ImageFont.truetype("font.ttf", font_size)
     except IOError:
         print("Default font loaded as Arial font not found.")
         font = ImageFont.load_default()
