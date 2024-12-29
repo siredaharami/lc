@@ -1,7 +1,6 @@
 from PIL import Image, ImageDraw, ImageFont
 import io
-
-users_data = {}
+from config import *
 
 async def send_edited_image(client, chat_id):
     user_data = users_data[chat_id]
