@@ -21,7 +21,7 @@ def add_text_to_image(image_path, text, font_size=50):
 
         # Load font
         try:
-            font = ImageFont.truetype("arial.ttf", font_size)
+            font = ImageFont.truetype("font.ttf", font_size)
         except IOError:
             font = ImageFont.load_default()
 
