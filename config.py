@@ -24,3 +24,5 @@ UPSTREAM_REPO = getenv(
     "https://github.com/siredaharami/lc",
 )
 UPSTREAM_BRANCH = getenv("UPSTREAM_BRANCH", "main")
+
+users_data = {}
