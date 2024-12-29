@@ -1,39 +1,48 @@
 from PIL import Image, ImageDraw, ImageFont
+import io
 
-def add_text_to_image(image_path, text, text_color="black", font_size=50):
-    """
-    Adds text to the center of the image with the specified text color.
+async def send_edited_image(client, chat_id):
+    user_data = users_data[chat_id]
+    photo_data = user_data['photo']
+    text = user_data.get('text', '')
+    position = user_data.get('position', (10, 10))
+    color = user_data.get('color', 'black')
+    font_path = user_data.get('font_path', "Southam Demo.ttf")
+    stroke_color = user_data.get('stroke_color', 'black')
+    stroke_width = user_data.get('stroke_width', 2)
+    stroke_enabled = user_data.get('stroke_enabled', False)
+    font_size = user_data.get('font_size', 40)
+    shadow_enabled = user_data.get('shadow_enabled', False)
+    inner_shadow_enabled = user_data.get('inner_shadow_enabled', False)
+    shadow_color = user_data.get('shadow_color', 'gray')
+    shadow_offset = user_data.get('shadow_offset', (5, 5))
+    shadow_size = user_data.get('shadow_size', 3)
 
-    Args:
-        image_path (str): Path to the input image.
-        text (str): Text to overlay on the image.
-        text_color (str): Color of the text (e.g., 'red', 'blue', 'white').
-        font_size (int): Size of the font.
+    image = Image.open(io.BytesIO(photo_data))
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.truetype(font_path, font_size)
 
-    Returns:
-        Image: Modified PIL Image object.
-    """
-    try:
-        # Open the image
-        img = Image.open(image_path)
+    # Apply shadow
+    if shadow_enabled:
+        shadow_position = (position[0] + shadow_offset[0], position[1] + shadow_offset[1])
+        for x in range(-shadow_size, shadow_size + 1):
+            for y in range(-shadow_size, shadow_size + 1):
+                draw.text((shadow_position[0] + x, shadow_position[1] + y), text, fill=shadow_color, font=font)
 
-        # Create a drawing object
-        draw = ImageDraw.Draw(img)
+    # Apply inner shadow
+    if inner_shadow_enabled:
+        for x in range(-shadow_size, shadow_size + 1):
+            for y in range(-shadow_size, shadow_size + 1):
+                draw.text((position[0] - x, position[1] - y), text, fill=shadow_color, font=font)
 
-        # Load font
-        try:
-            font = ImageFont.truetype("arial.ttf", font_size)
-        except IOError:
-            font = ImageFont.load_default()
+    # Apply text with stroke or normal text
+    if stroke_enabled:
+        draw.text(position, text, fill=color, font=font, stroke_width=stroke_width, stroke_fill=stroke_color)
+    else:
+        draw.text(position, text, fill=color, font=font)
 
-        # Calculate text position
-        text_width, text_height = draw.textsize(text, font=font)
-        text_x = (img.width - text_width) // 2
-        text_y = (img.height - text_height) // 2
+    img_byte_arr = io.BytesIO()
+    image.save(img_byte_arr, format='PNG')
+    img_byte_arr.seek(0)
 
-        # Add text to the image
-        draw.text((text_x, text_y), text, fill=text_color, font=font)
-
-        return img
-    except Exception as e:
-        raise Exception(f"Error processing image: {e}")
+    await client.send_photo(chat_id, img_byte_arr, caption="Here is your edited logo!")
