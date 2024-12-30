@@ -6,6 +6,20 @@ from config import *
 
 @app.on_message(filters.photo)
 async def handle_photo(client, message):
+    photo = await message.download()
+    with open(photo, "rb") as file:
+        photo_bytes = file.read()
+
+    users_data[message.chat.id] = {
+        'photo': photo_bytes,
+        'position': (10, 10),
+        'font_size': 40,
+        'color': 'black',
+        'stroke_enabled': False,
+        'stroke_width': 2,
+        'stroke_color': 'black',
+        'font_path': "font.ttf"
+    }
     await message.reply_text("I got the image! Now send me the text you want to add to the image.")
 
 @app.on_message(filters.text & ~filters.command("start"))
@@ -60,7 +74,7 @@ async def handle_callback_query(client, callback_query):
         if data.startswith('color_'):
             users_data[chat_id]['color'] = data.split('_')[1]
             await callback_query.answer(f"Text color set to {users_data[chat_id]['color']}!", show_alert=True)
-
+        
         elif data == 'toggle_shadow':
             users_data[chat_id]['shadow_enabled'] = not users_data[chat_id].get('shadow_enabled', False)
             status = "enabled" if users_data[chat_id]['shadow_enabled'] else "disabled"
@@ -200,6 +214,50 @@ async def handle_callback_query(client, callback_query):
         elif data == 'increase_shadow_offset':
             current_offset = users_data[chat_id].get('shadow_offset', (5, 5))
             new_offset = (current_offset[0] + 1, current_offset[1] + 1)
+            users_data[chat_id]['shadow_offset'] = new_offset
+            await callback_query.answer(f"Shadow offset increased to {new_offset}!", show_alert=True)
+
+        elif data == 'decrease_shadow_offset':
+            current_offset = users_data[chat_id].get('shadow_offset', (5, 5))
+            new_offset = (max(0, current_offset[0] - 1), max(0, current_offset[1] - 1))
+            users_data[chat_id]['shadow_offset'] = new_offset
+            await callback_query.answer(f"Shadow offset decreased to {new_offset}!", show_alert=True)
+
+        elif data == 'increase_inner_shadow_size':
+            users_data[chat_id]['inner_shadow_size'] += 1
+            await callback_query.answer(f"Inner shadow size increased to {users_data[chat_id]['inner_shadow_size']}!", show_alert=True)
+
+        elif data == 'decrease_inner_shadow_size':
+            current_size = users_data[chat_id].get('inner_shadow_size', 1)
+            if current_size > 1:
+                users_data[chat_id]['inner_shadow_size'] -= 1
+                await callback_query.answer(f"Inner shadow size decreased to {users_data[chat_id]['inner_shadow_size']}!", show_alert=True)
+            else:
+                await callback_query.answer("Inner shadow size cannot be less than 1!", show_alert=True)
+        
+        elif data == 'inner_shadow_colors':
+            await callback_query.message.reply_text(
+                "Select Inner Shadow Color:",
+                reply_markup=InlineKeyboardMarkup(
+                    [
+                        [InlineKeyboardButton("Black", callback_data='inner_shadow_color_black')],
+                        [InlineKeyboardButton("Gray", callback_data='inner_shadow_color_gray')],
+                        [InlineKeyboardButton("Red", callback_data='inner_shadow_color_red')],
+                        [InlineKeyboardButton("Green", callback_data='inner_shadow_color_green')]
+                    ]
+                )
+            )
+            await callback_query.answer()
+
+        elif data == 'increase_inner_shadow_offset':
+            current_offset = users_data[chat_id].get('inner_shadow_offset', (5, 5))
+            new_offset = (current_offset[0] + 1, current_offset[1] + 1)
+            users_data[chat_id]['inner_shadow_offset'] = new_offset
+            await callback_query.answer(f"Inner shadow offset increased to {new_offset}!", show_alert=True)
+
+        elif data == 'decrease_inner_shadow_offset':
+            current_offset = users_data[chat_id].get('inner_shadow_offset', (5, 5))
+            new_offset = (max(0, current_offset[0] - 1), max(0, current_offset[1] - 1))
             users_data[chat_id]['inner_shadow_offset'] = new_offset
             await callback_query.answer(f"Inner shadow offset decreased to {new_offset}!", show_alert=True)
 
